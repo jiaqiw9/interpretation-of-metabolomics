@@ -1,0 +1,2 @@
+# interpretation-of-metabolomics
+Metabolomics data requires data processing (e.g., extraction of peak area values, different transformation, and normalization strategies), statistical analysis (e.g., t- tests, ANOVA, PCA) and machine learning algorithms (e.g., PLS-DA, Random Forest). Students will be provided with a dataset which will assess the stability of about 200 polar metabolites across four different storage conditions using dried blood spots acquired from a novel microsampling device.
