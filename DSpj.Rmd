@@ -1,0 +1,83 @@
+---
+title: "dspj"
+author: "Xinle Chen"
+date: "8/5/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+study_sc <- read.csv(file="~/Desktop/Study 2 - Storage conditions -MDataSci 2021.csv")
+study_sc
+```
+```{r}
+x <- as.matrix(study_sc[, 3:138])
+x1 <- as.matrix(study_sc[1:4, 3:188])
+x2 <- study_sc[5:8, 3:188]
+x3 <- study_sc[9:11, 3:188]
+x4 <- study_sc[12:15, 3:188]
+
+```
+
+
+```{r}
+# Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form.
+
+# Sample size of each group
+table(Group)
+# The mean of each group
+aggregate(x, by = list(Group), FUN = mean)
+# Standard deviation of each group
+aggregate(x, by = list(Group), FUN = sd)
+
+```
+
+
+
+```{r}
+colnames(x, do.NULL = TRUE, prefix = "col")
+```
+```{r}
+y <- cbind(Dimethylglycine_HMDB0000092,Glyoxylic.acid_HMDB0000119,Pyruvic.acid_HMDB0000243,L.Lactic.acid_HMDB0000190,Alpha.Hydroxyisobutyric.acid_HMDB0000729,Glycolic.acid_HMDB0000115,Caproic.acid_HMDB0000535,L.Alanine_HMDB0000161,Alpha.ketoisovaleric.acid_HMDB0000019,Glycine_HMDB0000123,Oxalic.acid_HMDB0002329,Hydroxylamine_HMDB0003338,X2.Hydroxybutyric.acid_HMDB0000008,Acetoacetic.acid_HMDB0000060,Hydroxypropionic.acid_HMDB0000700,Pyruvic.acid_HMDB0000243.1,X3.Hydroxybutyric.acid_HMDB0000357,X.S..3.Hydroxyisobutyric.acid_HMDB0000023,X2.Hydroxy.3.methylbutyric.acid_HMDB0000407,D.Alpha.aminobutyric.acid_HMDB0000650,X3.Methyl.2.oxovaleric.acid_HMDB0000491,Beta.Alanine_HMDB0000056,X2.Methyl.3.hydroxybutyric.acid_HMDB0000354,X3.Methyl.2.oxovaleric.acid_HMDB0000491.1,Malonic.acid_HMDB0000691,X3.Aminoisobutanoic.acid_HMDB0003911,X3.Hydroxyisovaleric.acid_HMDB0000754,Ketoleucine_HMDB0000695,L.Valine_HMDB0000883,ITSD_Valine,Urea_HMDB0000294,Benzoic.acid_HMDB0001870,Caprylic.acid_HMDB0000482,Glycerol_HMDB0000131,Ethanolamine_HMDB0000149,L.Leucine_HMDB0000687,Acetylglycine_HMDB0000532,L.Isoleucine_HMDB0000172,Nicotinic.acid_HMDB0001488,Maleic.acid_HMDB0000176,L.Proline_HMDB0000162,Phenylacetic.acid_HMDB0000209,Succinic.acid_HMDB0000254,Glycine_HMDB0000123.1,Methylsuccinic.acid_HMDB0001844,Glyceric.acid_HMDB0000139,Fumaric.acid_HMDB0000134,Uracil_HMDB0000300,Pelargonic.acid_HMDB0000847,L.Serine_HMDB0000187,L.Threonine_HMDB0000167,Mesaconic.acid_HMDB0000749,Glutaric.acid_HMDB0000661,Thymine_HMDB0000262,Beta.Alanine_HMDB0000056.1,L.Homoserine_HMDB0000719,Capric.acid_HMDB0000511,Citramalic.acid_HMDB0000426,Malic.acid_HMDB0000744,Niacinamide_HMDB0001406,Adipic.acid_HMDB0000448,D.Threitol_HMDB0004136,Dihydrouracil_HMDB0000076,Erythritol_HMDB0002994,N.Acetylserine_HMDB0002931,L.Aspartic.acid_HMDB0000191,L.Methionine_HMDB0000696,X4.Hydroxyproline_HMDB0000725,Pyroglutamic.acid_HMDB0000267,Cytosine_HMDB0000630,Gamma.Aminobutyric.acid_HMDB0000112,Threonic.acid_HMDB0000943,L.Cysteine_HMDB0000574,L.2.Hydroxyglutaric.acid_HMDB0000694,Creatinine_HMDB0000562,X3.Hydroxyglutaric.acid_HMDB0000428,Oxoglutaric.acid_HMDB0000208,Phenylpyruvic.acid_HMDB0000205,Pimelic.acid_HMDB0000857,Phenyllactic.acid_HMDB0000779,Phosphoenolpyruvic.acid_HMDB0000263,Ornithine_HMDB0000214,Hypotaurine_HMDB0000965,Triethanolamine_HMDB0032538,X2.Aminobenzoic.acid_HMDB0001123,L.Glutamic.acid_HMDB0000148,X4.Hydroxybenzoic.acid_HMDB0000500,X5.Aminopentanoic.acid_HMDB0003355,X2.3.Dihydroxybutanedioic.acid_HMDB0059916,L.Phenylalanine_HMDB0000159,Dodecanoic.acid_HMDB0000638,Lyxose_HMDB0003402_1,D.Xylose_HMDB0000098,Lyxose_HMDB0003402_2,D.Arabinose_HMDB0029942,L.Asparagine_HMDB0000168,D.Ribulose_HMDB0000621,D.Ribose_HMDB0000283,D.Xylulose_HMDB0001644,X3.Sulfinoalanine_HMDB0000996,Suberic.acid_HMDB0000893,L.Lysine_HMDB0000182,Levoglucosan_HMDB0000640,D.Arabitol_HMDB0000568,Ribitol_HMDB0000508,cis.Aconitic.acid_HMDB0000072,Quinolinic.acid_HMDB0000232,Putrescine_HMDB0001414,Glycerol.3.phosphate_HMDB0000126,Vanillic.acid_HMDB0000484,L.Glutamine_HMDB0000641,X2.Phosphoglyceric.acid_HMDB0000362,Azelaic.acid_HMDB0000784,L.Dihydroorotic.acid_HMDB0003349,O.Phosphoethanolamine_HMDB0000224,X3.Phosphoglyceric.acid_HMDB0000807,Isocitric.acid_HMDB0000193,Hypoxanthine_HMDB0000157,Citric.acid_HMDB0000094,L.Arginine_HMDB0000517,Ornithine_HMDB0000214.1,Dopamine_HMDB0000073,Myristic.acid_HMDB0000806,X1.5.Anhydrosorbitol_HMDB0002712,D.Tagatose_HMDB0003418,Psicose_1,Sebacic.acid_HMDB0000792,D.Fructose_HMDB0000660,Gluconolactone_HMDB0000150,L.Sorbose_HMDB0001266,D.Mannose_HMDB0000169,Hydroxyphenyllactic.acid_HMDB0000755,D.Glucose_HMDB0000122,N.Acetylglutamine_HMDB0006029,L.Lysine_HMDB0000182.1,D.Mannose_HMDB0000169.1)
+```
+
+
+```{r}
+# correlation matrix
+data.frame(cor(x))
+```
+
+```{r}
+Aanova = manova( cbind(Dimethylglycine_HMDB0000092,Glyoxylic.acid_HMDB0000119,Pyruvic.acid_HMDB0000243,L.Lactic.acid_HMDB0000190,Alpha.Hydroxyisobutyric.acid_HMDB0000729,Glycolic.acid_HMDB0000115,Caproic.acid_HMDB0000535,L.Alanine_HMDB0000161,Alpha.ketoisovaleric.acid_HMDB0000019,Glycine_HMDB0000123,Oxalic.acid_HMDB0002329) ~ Group, data = study_sc)
+summary(Aanova)
+
+```
+```{r}
+aov1 <- aov(x ~ Group,data=study_sc)
+summary(aov1)
+```
+
+
+```{r}
+fit <- manova(x ~ Group,data=study_sc)
+summary.aov(fit)
+
+```
+
+```{r}
+pca_sc <- read.csv(file="~/Desktop/PCA_features.csv")
+pca_sc$Group <- factor(c(rep(1,4),rep(2,4),rep(3,3),rep(4,4)))
+pca_sc
+```
+
+```{r}
+fit2 <- manova(cbind(Feature1,Feature2,Feature3,Feature4) ~ Group, data = pca_sc)
+summary(fit2)
+```
+
+
+
