@@ -1,0 +1,193 @@
+---
+title: "dspj"
+author: "Xinle Chen"
+date: "8/5/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+study_sc <- read.csv(file="~/Desktop/Study 2 - Storage conditions -MDataSci 2021.csv")
+study_sc
+```
+
+
+```{r}
+Group <- study_sc$Group
+x <- as.matrix(study_sc[, 3:188])
+```
+
+```{r}
+# Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form.
+
+# Sample size of each group
+table(Group)
+# The mean of each group
+aggregate(x, by = list(Group), FUN = mean)
+# Standard deviation of each group
+aggregate(x, by = list(Group), FUN = sd)
+
+```
+
+```{r}
+# correlation matrix
+data.frame(cor(x))
+```
+```{r}
+aov1 <- aov(x ~ Group,data=study_sc)
+summary(aov1)
+```
+
+
+```{r}
+fit <- manova(x ~ Group,data=study_sc)
+summary.aov(fit)
+```
+
+```{r}
+pca_sc <- read.csv(file="~/Desktop/PCA_features.csv")
+pca_sc$Group <- factor(c(rep(1,4),rep(2,4),rep(3,3),rep(4,4)))
+pca_sc
+```
+
+```{r}
+fit2 <- manova(cbind(Feature1,Feature2,Feature3,Feature4) ~ Group, data = pca_sc)
+summary(fit2)
+```
+
+
+```{r}
+# do pca
+data = scale(study_sc[, 3:188])
+pcx = prcomp(data, retx = T)
+lambda = pcx$sdev^2 
+gamma = pcx$rotation
+```
+
+```{r}
+# calculate cumulative variance
+library("factoextra")
+eig.val <- get_eigenvalue(pcx) 
+eig.val
+```
+```{r}
+screeplot(pcx, type = 'lines')
+```
+```{r}
+# cluster of pca dataset
+library(ggplot2)
+V8 = group = rep(c("2_8degC", "RT", "BHT", "-20degC"), c(4, 4, 3, 4))
+df = data.frame(pcx$x, group = V8)
+group = as.factor(df$group)
+ggplot(df[,1:2],aes(x=PC1, y=PC2, color=group)) + geom_point()
+```
+
+```{r}
+# fit random forest
+library(randomForest)
+my_data = study_sc[, 2:188]
+
+# try to find best number of trees
+rf1<- randomForest(factor(Group) ~ ., data=my_data, ntree=1000, importance=T)
+plot(rf1$err.rate[,1], type = "l", ylab = "OOB Error Rate", xlab = "Number of Trees")
+```
+```{r}
+# feature importance
+rf1<- randomForest(factor(Group) ~ ., data=my_data, ntree=500, importance=T)
+varImpPlot(rf1, main = "randomForest with B = 500", cex=0.7)
+```
+```{r}
+# top 20
+rf1$importance[order(rf1$importance[,5],decreasing=T)[1:20],5:6]
+```
+
+
+```{r}
+library(MASS)
+library(ggpubr)
+library(ggforce)
+
+# for the top 1 important metabolite
+d1 <- data.frame(
+  y = study_sc$Heptadecanoic.acid_HMDB0002259,
+  group = study_sc$Group
+  )
+# Sinaplot
+ggplot(d1, aes(group, y)) +
+  geom_sina(aes(color = group), size = 2)+
+  scale_color_manual(values =  c("#00AFBB", "#E7B800", "#FC4E07",'green'))
+
+# t test between every two groups
+compare_means(y ~ group, data = d1, method = 't.test')
+```
+
+
+```{r}
+# for the top 2 important metabolite
+d2 <- data.frame(
+  y = study_sc$Benzoic.acid_HMDB0001870,
+  group = study_sc$Group
+  )
+# Sinaplot
+ggplot(d2, aes(group, y)) +
+  geom_sina(aes(color = group), size = 2)+
+  scale_color_manual(values =  c("#00AFBB", "#E7B800", "#FC4E07",'green'))
+
+compare_means(y ~ group, data = d2, method = 't.test')
+```
+```{r}
+# for the top 3 important metabolite
+d3 <- data.frame(
+  y = study_sc$O.Phosphoethanolamine_HMDB0000224,
+  group = study_sc$Group
+  )
+# Sinaplot
+ggplot(d3, aes(group, y)) +
+  geom_sina(aes(color = group), size = 2)+
+  scale_color_manual(values =  c("#00AFBB", "#E7B800", "#FC4E07",'green'))
+compare_means(y ~ group, data = d3, method = 't.test')
+```
+```{r}
+# for the bottom 1 important metabolite
+d4 <- data.frame(
+  y = study_sc$X2.Hydroxybutyric.acid_HMDB0000008,
+  group = study_sc$Group
+  )
+# Sinaplot
+ggplot(d4, aes(group, y)) +
+  geom_sina(aes(color = group), size = 2)+
+  scale_color_manual(values =  c("#00AFBB", "#E7B800", "#FC4E07",'green'))
+compare_means(y ~ group, data = d4, method = 't.test')
+```
+```{r}
+# for the bottom 2 important metabolite
+d5 <- data.frame(
+  y = study_sc$myo.Inositol_HMDB0000211,
+  group = study_sc$Group
+  )
+# Sinaplot
+ggplot(d5, aes(group, y)) +
+  geom_sina(aes(color = group), size = 2)+
+  scale_color_manual(values =  c("#00AFBB", "#E7B800", "#FC4E07",'green'))
+
+compare_means(y ~ group, data = d5, method = 't.test')
+
+```
+```{r}
+# for the bottom 3 important metabolite
+d6 <- data.frame(
+  y = study_sc$Maleic.acid_HMDB0000176,
+  group = study_sc$Group
+  )
+# Sinaplot
+ggplot(d6, aes(group, y)) +
+  geom_sina(aes(color = group), size = 2)+
+  scale_color_manual(values =  c("#00AFBB", "#E7B800", "#FC4E07",'green'))
+
+compare_means(y ~ group, data = d6, method = 't.test')
+```
+
